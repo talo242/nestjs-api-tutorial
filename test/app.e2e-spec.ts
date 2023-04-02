@@ -86,7 +86,7 @@ describe('App e2e', () => {
       it('should sign in users', () => {
         return pactum
           .spec()
-          .post('/auth/signin')
+          .post('/auth/login')
           .withBody(dto)
           .expectStatus(200);
       });
@@ -94,7 +94,7 @@ describe('App e2e', () => {
       it('should return a token', () => {
         return pactum
           .spec()
-          .post('/auth/signin')
+          .post('/auth/login')
           .withBody(dto)
           .expectStatus(200)
           .expectJsonMatch({
@@ -107,7 +107,7 @@ describe('App e2e', () => {
         const { email: _, ...dtoWithoutEmail } = dto;
         return pactum
           .spec()
-          .post('/auth/signin')
+          .post('/auth/login')
           .withBody(dtoWithoutEmail)
           .expectStatus(400);
       });
@@ -116,17 +116,13 @@ describe('App e2e', () => {
         const { password: _, ...dtoWithoutPassword } = dto;
         return pactum
           .spec()
-          .post('/auth/signin')
+          .post('/auth/login')
           .withBody(dtoWithoutPassword)
           .expectStatus(400);
       });
 
       it('should throw an error if no body provided', () => {
-        return pactum
-          .spec()
-          .post('/auth/signin')
-          .withBody({})
-          .expectStatus(400);
+        return pactum.spec().post('/auth/login').withBody({}).expectStatus(400);
       });
     });
   });
