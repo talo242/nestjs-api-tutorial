@@ -98,9 +98,9 @@ describe('App e2e', () => {
           .withBody(dto)
           .expectStatus(200)
           .expectJsonMatch({
-            access_token: like(''),
+            status: 'ok',
           })
-          .stores('userAt', 'access_token');
+          .stores('userAt', 'res.headers.set-cookie[0]');
       });
 
       it('should throw an error if email is empty', () => {
@@ -130,13 +130,7 @@ describe('App e2e', () => {
   describe('User', () => {
     describe('Get me', () => {
       it('should get the current user', () => {
-        return pactum
-          .spec()
-          .get('/users/me')
-          .withHeaders({
-            Authorization: 'Bearer $S{userAt}',
-          })
-          .expectStatus(200);
+        return pactum.spec().get('/users/me').expectStatus(200).inspect();
       });
     });
 
@@ -149,9 +143,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .patch('/users')
-          .withHeaders({
-            Authorization: 'Bearer $S{userAt}',
-          })
+          .withCookies('$S{userAt}')
           .withBody(dto)
           .expectStatus(200)
           .expectBodyContains(dto.firstName)
